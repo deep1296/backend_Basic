@@ -2,7 +2,10 @@ require("dotenv").config();
 const express = require("express");
 //import Express from "express"; // module exports ==> Asynchronous code generation//
 // to use the express module you have to declare type = module above the script
+const cors = require("cors");
+
 const app = express();
+app.use(cors());
 
 const data = [
   {
