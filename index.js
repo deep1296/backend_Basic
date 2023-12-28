@@ -5,8 +5,12 @@ const express = require("express");
 //const cors = require("cors");
 
 const app = express();
-//app.use(cors());// cors procides the safety for the server it will allow the request which is coming from the same origin only 
-
+//app.use(cors());// cors procides the safety for the server it will allow the request which is coming from the same origin only
+app.use(express.static("dist")); // we have used build command to build and transformed all the files
+// of frontend into the dist folder and serving the build folder from backend and we have used proxy as well after generating the files server is running on the same port
+//  proxy : {
+//   "/api": "https://backend-basics-rz1f.onrender.com",
+// } used in confg file of vite or react == All the requests coming which use the api in it its serving from proxy used.
 const data = [
   {
     id: 1,
