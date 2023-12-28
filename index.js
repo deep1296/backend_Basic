@@ -2,10 +2,10 @@ require("dotenv").config();
 const express = require("express");
 //import Express from "express"; // module exports ==> Asynchronous code generation//
 // to use the express module you have to declare type = module above the script
-const cors = require("cors");
+//const cors = require("cors");
 
 const app = express();
-app.use(cors());
+//app.use(cors());// cors procides the safety for the server it will allow the request which is coming from the same origin only 
 
 const data = [
   {
@@ -34,7 +34,7 @@ app.get("/deep", (req, res) => {
   res.send("<H1>Deeptange<H1/>");
 });
 
-app.get("/deepInfor", (req, res) => {
+app.get("/api/deepInfor", (req, res) => {
   res.status(200).json(data);
 });
 app.listen(process.env.PORT, () => {
