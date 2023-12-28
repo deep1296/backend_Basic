@@ -1,11 +1,27 @@
 require("dotenv").config();
 const express = require("express");
+//import Express from "express"; // module exports ==> Asynchronous code generation//
+// to use the express module you have to declare type = module above the script
 const app = express();
 
-const data = {
-  name: "Deep",
-  age: 25,
-};
+const data = [
+  {
+    id: 1,
+    name: "<NAME>",
+  },
+  {
+    id: 2,
+    name: "<NAME>",
+  },
+  {
+    id: 3,
+    name: "<NAME>",
+  },
+  {
+    id: 4,
+    name: "<NAME>",
+  },
+];
 
 app.get("/", (req, res) => {
   res.send("Hello Deep!");
