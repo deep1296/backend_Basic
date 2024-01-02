@@ -16,6 +16,7 @@ const uploadOnCloudinary = async (localFilePath) => {
       overwrite: true,
       public_id: Date.now().toString(),
     });
+    fs.unlinkSync(localFilePath);
     //console.log("File uploaded successfully on Cloudinary", response);
     return response;
   } catch (error) {

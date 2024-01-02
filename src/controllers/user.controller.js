@@ -41,9 +41,20 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const avtarLocalPath = req.files.avtar[0]?.path;
 
-  console.log(req);
-  console.log("Body", req.body);
-  console.log("This is files", req.files);
+  // Second method to check if file is present or not it will show undefined if there is no file
+
+  // let avtarLocalPath;
+  // if (
+  //   req.files &&
+  //   Array.isArray(req.files.avtar) &&
+  //   req.files.avtar.length > 0
+  // ) {
+  //   avtarLocalPath = req.files.avtar[0].path;
+  // }
+
+  // console.log(req);
+  // console.log("Body", req.body);
+  // console.log("This is files", req.files);
 
   if (!avtarLocalPath) throw new ApiError(400, "Avatar file is not available");
 
