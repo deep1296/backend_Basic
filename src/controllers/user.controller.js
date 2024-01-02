@@ -32,7 +32,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // We can aslo use the operators provided by express
 
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ email, userName }],
   });
   if (existedUser) {
@@ -40,6 +40,11 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const avtarLocalPath = req.files.avtar[0]?.path;
+
+  console.log(req);
+  console.log("Body", req.body);
+  console.log("This is files", req.files);
+
   if (!avtarLocalPath) throw new ApiError(400, "Avatar file is not available");
 
   const avtar = await uploadOnCloudinary(avtarLocalPath);

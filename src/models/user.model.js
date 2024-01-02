@@ -19,7 +19,7 @@ const userSchema = new Schema(
       lowercase: true,
       trim: true,
     },
-    fullnName: {
+    fullName: {
       type: String,
       required: true,
       lowercase: true,
@@ -64,7 +64,7 @@ userSchema.methods.generateAccessToken = async function () {
       _id: this._id,
       username: this.username,
       email: this.email,
-      fullnName: this.fullnName,
+      fullName: this.fullName,
     },
     process.env.ACCESS_TOKEN_SECRET_KEY,
     { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
