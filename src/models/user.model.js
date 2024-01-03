@@ -27,7 +27,14 @@ const userSchema = new Schema(
       index: true,
     },
     avtar: {
-      type: String, // clodanry URL
+      avtar_image: {
+        type: String,
+        required: true,
+      },
+      avtar_id: {
+        type: String,
+        required: true,
+      },
     },
     watchHistory: [
       {

@@ -1,9 +1,8 @@
-import express from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import User from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
-import uploadOnCloudinary from "../utils/cloudinary.js";
+import { removeAssets, uploadOnCloudinary } from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -95,7 +94,10 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     fullName,
     password,
-    avtar: avtar?.url || "example.jpg",
+    avtar: {
+      avtar_image: avtar.url,
+      avtar_id: avtar.public_id,
+    },
   });
 
   const createdUser = await User.findById(user._id).select(
@@ -334,17 +336,25 @@ const changeAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(400, "error uploading avatar");
   }
 
+  const prevAvatar = req.user?.avtar?.avtar_id;
+
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
       $set: {
-        avtar: avtar.url,
+        avtar: {
+          avtar_image: avtar.url,
+          avtar_id: avtar.public_id,
+        },
       },
     },
     {
       new: true,
     }
   ).select("-password");
+
+  await removeAssets(prevAvatar);
+
   return res
     .status(202)
     .json(new ApiResponse(200, { user }, "Avatar updated successfully"));

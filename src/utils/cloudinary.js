@@ -26,4 +26,10 @@ const uploadOnCloudinary = async (localFilePath) => {
   }
 };
 
-export default uploadOnCloudinary;
+const removeAssets = async (filePath) => {
+  console.log("Removing", filePath);
+  if (!filePath) return null;
+  const response = await cloudinary.uploader.destroy(filePath);
+  return response;
+};
+export { uploadOnCloudinary, removeAssets };
