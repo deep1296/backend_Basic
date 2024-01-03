@@ -4,6 +4,7 @@ import {
   loginUser,
   regenerateAccessToken,
   registerUser,
+  updatePassword,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { authorization } from "../middlewares/auth.middleware.js";
@@ -20,5 +21,7 @@ router.route("/login").post(loginUser);
 
 router.route("/logout").post(authorization, logOutUser);
 router.route("/regenerateTokens").get(regenerateAccessToken);
+router.route("/resetPassword").post(authorization, updatePassword);
+
 
 export default router;
