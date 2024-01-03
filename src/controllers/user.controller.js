@@ -251,7 +251,7 @@ const regenerateAccessToken = asyncHandler(async (req, res) => {
 
 const updatePassword = asyncHandler(async (req, res) => {
   const { oldPassword, newPassword } = req.body;
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user?._id);
 
   if (!user) {
     throw new ApiError(400, "Unauthorized request");
@@ -271,10 +271,93 @@ const updatePassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Password updated successfully"));
 });
 
+const getCurrentUser = asyncHandler(async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    throw new ApiError(400, "Unauthorized request");
+  }
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        user,
+      },
+      "User fetched successfully"
+    )
+  );
+});
+
+const updateUserDetails = asyncHandler(async (req, res) => {
+  const { fullName, email } = req.body;
+
+  if (!fullName || !email) {
+    throw new ApiError(400, "User details are required");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        fullName,
+        email: email,
+      },
+    },
+    {
+      new: true,
+    }
+  ).select("-password");
+  // const user = await User.findById(req.user?._id);
+  // if (!user) {
+  //   throw new ApiError(400, "Unauthorized request");
+  // }
+
+  // user.fullName = fullName;
+  // user.email = email;
+  // await user.save({
+  //   validateBeforeSave: false,
+  // });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "User details updated successfully"));
+});
+
+const changeAvatar = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file?.path;
+
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar file is not available");
+  }
+
+  const avtar = await uploadOnCloudinary(avatarLocalPath);
+
+  if (!avtar) {
+    throw new ApiError(400, "error uploading avatar");
+  }
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        avtar: avtar.url,
+      },
+    },
+    {
+      new: true,
+    }
+  ).select("-password");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "Avatar updated successfully"));
+});
+
 export {
   registerUser,
   loginUser,
   logOutUser,
   regenerateAccessToken,
   updatePassword,
+  getCurrentUser,
+  updateUserDetails,
+  changeAvatar,
 };
