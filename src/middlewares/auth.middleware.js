@@ -3,7 +3,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import Jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-export const authorization = asyncHandler(async (req, res, next) => {
+export const authorization = asyncHandler(async (req, _, next) => {
   
   try {
     const token =
