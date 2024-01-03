@@ -27,6 +27,8 @@ router.route("/regenerateTokens").get(regenerateAccessToken);
 router.route("/resetPassword").post(authorization, updatePassword);
 router.route("/getUser").get(authorization, getCurrentUser);
 router.route("/updateDetails").post(authorization, updateUserDetails);
-router.route("/changeAvtar").post(authorization, changeAvatar);
+router
+  .route("/changeAvtar")
+  .post(authorization, upload.single("avtar"), changeAvatar);
 
 export default router;

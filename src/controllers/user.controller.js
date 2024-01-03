@@ -6,6 +6,24 @@ import ApiResponse from "../utils/ApiResponse.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import jwt from "jsonwebtoken";
 
+const generateAccessAndRefreshToken = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) throw new ApiError(500, "Something went wrong");
+
+    const accessToken = await user.generateAccessToken();
+    const refreshToken = await user.generateRefreshToken();
+
+    user.refreshToken = refreshToken;
+    user.save({
+      validateBeforeSave: false,
+    });
+
+    return { accessToken, refreshToken };
+  } catch (error) {
+    throw new ApiError(500, "Something went wrong while generating tokens");
+  }
+};
 const registerUser = asyncHandler(async (req, res) => {
   const { userName, email, fullName, password } = req.body;
   // get user details from frontend
@@ -90,25 +108,6 @@ const registerUser = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, createdUser, "User created successfully"));
 });
-
-const generateAccessAndRefreshToken = async (userId) => {
-  try {
-    const user = await User.findById(userId);
-    if (!user) throw new ApiError(500, "Something went wrong");
-
-    const accessToken = await user.generateAccessToken();
-    const refreshToken = await user.generateRefreshToken();
-
-    user.refreshToken = refreshToken;
-    user.save({
-      validateBeforeSave: false,
-    });
-
-    return { accessToken, refreshToken };
-  } catch (error) {
-    throw new ApiError(500, "Something went wrong while generating tokens");
-  }
-};
 
 const loginUser = asyncHandler(async (req, res) => {
   // get data from req.body
@@ -231,7 +230,7 @@ const regenerateAccessToken = asyncHandler(async (req, res) => {
     };
 
     res
-      .status(200)
+      .status(201)
       .cookie("accessToken", accessToken, options)
       .cookie("refreshToken", refreshToken, options)
       .json(
@@ -267,7 +266,7 @@ const updatePassword = asyncHandler(async (req, res) => {
   });
 
   return res
-    .status(200)
+    .status(202)
     .json(new ApiResponse(200, {}, "Password updated successfully"));
 });
 
@@ -318,7 +317,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
   // });
 
   return res
-    .status(200)
+    .status(202)
     .json(new ApiResponse(200, { user }, "User details updated successfully"));
 });
 
@@ -347,7 +346,7 @@ const changeAvatar = asyncHandler(async (req, res) => {
     }
   ).select("-password");
   return res
-    .status(200)
+    .status(202)
     .json(new ApiResponse(200, { user }, "Avatar updated successfully"));
 });
 
