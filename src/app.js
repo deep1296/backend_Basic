@@ -5,11 +5,11 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN, // to get the request from the selected origin only block other origins... Here you can set your frontend deployed link.
-    optionsSuccessStatus: 200,
-    credentials: true,
-  })
+   cors({
+      origin: process.env.CORS_ORIGIN, // to get the request from the selected origin only block other origins... Here you can set your frontend deployed link.
+      optionsSuccessStatus: 200,
+      credentials: true,
+   })
 );
 
 app.use(express.json({ limit: "16kb" })); // we have set the limit to 16kb more than 16 kb we are not accepting ==> Reason ==> Server crashes
